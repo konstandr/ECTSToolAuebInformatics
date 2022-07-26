@@ -1,4 +1,4 @@
-public class ClassRoom {
+public class Subject {
     String eksamhno;
     String code;
     String name;

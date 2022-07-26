@@ -25,9 +25,9 @@ public class Methods {
     private int susthmataLogismikou = 0;
     private int diaxeirishDedKaiGnwsewn = 0;
     private int kuvernoasfaleia = 0;
-    List<ClassRoom> classRooms;
+    List<Subject> Subjects;
     void loadTxtToList(String txt) throws FileNotFoundException {
-        classRooms = new ArrayList<>();
+        Subjects = new ArrayList<>();
         //Scammer me delimiter to ", "
         Scanner sc = new Scanner(new FileReader(txt)).useDelimiter(", ");
         //String opoy tha vazw kathe string xD?!
@@ -35,7 +35,7 @@ public class Methods {
         boolean bool;
         // checking end of file
         while (sc.hasNext()) {
-            ClassRoom cla = new ClassRoom();
+            Subject cla = new Subject();
             str = sc.next();
             cla.setEksamhno(str);
             str = sc.next();
@@ -56,7 +56,7 @@ public class Methods {
             cla.setKuklous(Boolean.parseBoolean(str));
             str = sc.next();
             cla.setEpiloghs(Boolean.parseBoolean(str));
-            classRooms.add(cla);
+            Subjects.add(cla);
         }
 
     }
@@ -69,11 +69,11 @@ public class Methods {
         Scanner in = new Scanner(System.in);
         if (!exists) {
             FileWriter fout = new FileWriter(userName + ".txt", true);
-            for (ClassRoom aClassRoom : classRooms) {
-                System.out.println("Exeis perasei " + aClassRoom.getName() + "?");
+            for (Subject aSubject : Subjects) {
+                System.out.println("Exeis perasei " + aSubject.getName() + "?");
                 String apanthsh = in.nextLine();
                 if (apanthsh.equals("Nai") || apanthsh.equals("nai")) {
-                    aClassRoom.setPerasmeno("nai");
+                    aSubject.setPerasmeno("nai");
                 }
             }
             createTxt(fout);
@@ -91,14 +91,14 @@ public class Methods {
                     e.printStackTrace();
                 }
                 FileWriter fout1 = new FileWriter(userName + ".txt", true);
-                for (ClassRoom aClassRoom : classRooms) {
-                    System.out.println("Exeis perasei " + aClassRoom.getName() + "?");
+                for (Subject aSubject : Subjects) {
+                    System.out.println("Exeis perasei " + aSubject.getName() + "?");
                     String apanthsh = in.next();
                     if (apanthsh.equals("Nai") || apanthsh.equals("nai") || apanthsh.equals("n")) {
-                        aClassRoom.setPerasmeno("nai");
+                        aSubject.setPerasmeno("nai");
                     }
                     else{
-                        aClassRoom.setPerasmeno("oxi");
+                        aSubject.setPerasmeno("oxi");
                     }
                 }
                 createTxt(fout1);
@@ -111,43 +111,43 @@ public class Methods {
     }
 
     private void createTxt(FileWriter fout) throws IOException {
-        for (int i = 0; i < classRooms.size(); i++){
-            fout.write(classRooms.get(i).getEksamhno() + ", ");
-            fout.write(classRooms.get(i).getCode() + ", ");
-            fout.write(classRooms.get(i).getName() + ", ");
-            fout.write(classRooms.get(i).getEcts() + ", ");
-            fout.write(classRooms.get(i).getProapaitoumena() + ", ");
-            fout.write(classRooms.get(i).getKukloi() + ", ");
+        for (int i = 0; i < Subjects.size(); i++){
+            fout.write(Subjects.get(i).getEksamhno() + ", ");
+            fout.write(Subjects.get(i).getCode() + ", ");
+            fout.write(Subjects.get(i).getName() + ", ");
+            fout.write(Subjects.get(i).getEcts() + ", ");
+            fout.write(Subjects.get(i).getProapaitoumena() + ", ");
+            fout.write(Subjects.get(i).getKukloi() + ", ");
 
 
-                fout.write(classRooms.get(i).getPerasmeno() + ", ");
+                fout.write(Subjects.get(i).getPerasmeno() + ", ");
 
-            fout.write(classRooms.get(i).getPurhna() + ", ");
-            fout.write(classRooms.get(i).getKuklous() + ", ");
-            if (i < classRooms.size()-1) {
-                fout.write(classRooms.get(i).getEpiloghs() + ", ");
+            fout.write(Subjects.get(i).getPurhna() + ", ");
+            fout.write(Subjects.get(i).getKuklous() + ", ");
+            if (i < Subjects.size()-1) {
+                fout.write(Subjects.get(i).getEpiloghs() + ", ");
             }
             else{
-                fout.write(String.valueOf(classRooms.get(i).getEpiloghs()));
+                fout.write(String.valueOf(Subjects.get(i).getEpiloghs()));
             }
         }
     }
 
     void printString() throws FileNotFoundException {
         //loadTxtToList(userName+".txt");
-        for (int i = 0; i < classRooms.size(); i++){
-            System.out.println(classRooms.get(i).getName() + " | " + classRooms.get(i).getEcts() + " | " +classRooms.get(i).getPerasmeno());
+        for (int i = 0; i < Subjects.size(); i++){
+            System.out.println(Subjects.get(i).getName() + " | " + Subjects.get(i).getEcts() + " | " +Subjects.get(i).getPerasmeno());
         }
     }
 
     double printEcts() throws FileNotFoundException {
         //loadTxtToList(userName+".txt");
         double ect = 0;
-        System.out.println(classRooms.size());
-        for (int i = 0; i < classRooms.size(); i++){
+        System.out.println(Subjects.size());
+        for (int i = 0; i < Subjects.size(); i++){
             //System.out.println(classes.get(i).getName() + " " + classes.get(i).getPerasmeno());
-            if (classRooms.get(i).getPerasmeno().equals("nai")){
-                ect += Double.parseDouble(classRooms.get(i).getEcts());
+            if (Subjects.get(i).getPerasmeno().equals("nai")){
+                ect += Double.parseDouble(Subjects.get(i).getEcts());
             }
         }
         System.out.println("O xrhsths " + userName + " exei " + ect + " ects apo 240");
@@ -156,9 +156,9 @@ public class Methods {
 
     void printKuklos() throws FileNotFoundException {
         String epil = printInfoKuklwn();
-        for (ClassRoom aClassRoom : classRooms) {
-            if (aClassRoom.getPerasmeno().equals("nai") && aClassRoom.getKukloi().contains(String.valueOf(epil))) {
-                System.out.println("To auksha gia to " + aClassRoom.getName());
+        for (Subject aSubject : Subjects) {
+            if (aSubject.getPerasmeno().equals("nai") && aSubject.getKukloi().contains(String.valueOf(epil))) {
+                System.out.println("To auksha gia to " + aSubject.getName());
                 switch (epil) {
                     case "1" -> episthmhDedomenwn++;
                     case "2" -> epixeirisiakhEreuna++;
@@ -210,9 +210,9 @@ public class Methods {
         Scanner in = new Scanner(System.in);
         String epil = in.next();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate sto " + epil + "o eksamhno");
-        for (ClassRoom aClassRoom : classRooms){
-            if (aClassRoom.getEksamhno().equals(epil)){
-                System.out.println(aClassRoom.getName() + " " + aClassRoom.getPerasmeno());
+        for (Subject aSubject : Subjects){
+            if (aSubject.getEksamhno().equals(epil)){
+                System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
             }
         }
     }
@@ -223,9 +223,9 @@ public class Methods {
         int epil = in.nextInt();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate mexri to " + epil + "o eksamhno");
         for (int i = 1; i <= epil; i++) {
-            for (ClassRoom aClassRoom : classRooms){
-                if (aClassRoom.getEksamhno().equals(String.valueOf(i))) {
-                    System.out.println(aClassRoom.getName() + " " + aClassRoom.getPerasmeno());
+            for (Subject aSubject : Subjects){
+                if (aSubject.getEksamhno().equals(String.valueOf(i))) {
+                    System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
                 }
             }
         }
@@ -237,7 +237,7 @@ public class Methods {
         int epil = in.nextInt();
 
         if (epil == 1){
-            for (ClassRoom aClasRoom : classRooms) {
+            for (Subject aClasRoom : Subjects) {
 
                 if (Integer.parseInt(aClasRoom.getEksamhno()) % 2 != 0 && aClasRoom.getPerasmeno().equals("oxi")) {
                     System.out.println(aClasRoom.getName());
@@ -245,14 +245,14 @@ public class Methods {
             }
         }
         else if (epil == 2){
-            for (ClassRoom aClasRoom : classRooms) {
+            for (Subject aClasRoom : Subjects) {
                 if (Integer.parseInt(aClasRoom.getEksamhno()) % 2 == 0 && aClasRoom.getPerasmeno().equals("oxi")) {
                     System.out.println(aClasRoom.getName());
                 }
             }
         }
         else{
-            for (ClassRoom aClasRoom : classRooms) {
+            for (Subject aClasRoom : Subjects) {
                 if (aClasRoom.getPerasmeno().equals("oxi")) {
                     System.out.println(aClasRoom.getName());
                 }
