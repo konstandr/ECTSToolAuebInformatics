@@ -1,3 +1,5 @@
+package src;
+
 public class Subject {
     String eksamhno;
     String code;

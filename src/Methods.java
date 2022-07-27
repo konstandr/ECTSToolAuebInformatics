@@ -1,4 +1,11 @@
+package src;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.*;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,129 +32,52 @@ public class Methods {
     private int susthmataLogismikou = 0;
     private int diaxeirishDedKaiGnwsewn = 0;
     private int kuvernoasfaleia = 0;
-    List<Subject> Subjects;
-    void loadTxtToList(String txt) throws FileNotFoundException {
-        Subjects = new ArrayList<>();
-        //Scammer me delimiter to ", "
-        Scanner sc = new Scanner(new FileReader(txt)).useDelimiter(", ");
-        //String opoy tha vazw kathe string xD?!
-        String str;
-        boolean bool;
-        // checking end of file
-        while (sc.hasNext()) {
-            Subject cla = new Subject();
-            str = sc.next();
-            cla.setEksamhno(str);
-            str = sc.next();
-            cla.setCode(str);
-            str = sc.next();
-            cla.setName(str);
-            str = sc.next();
-            cla.setEcts(str);
-            str = sc.next();
-            cla.setProapaitoumena(str);
-            str = sc.next();
-            cla.setKukloi(str);
-            str = sc.next();
-            cla.setPerasmeno(str);
-            str = sc.next();
-            cla.setPurhna(Boolean.parseBoolean(str));
-            str = sc.next();
-            cla.setKuklous(Boolean.parseBoolean(str));
-            str = sc.next();
-            cla.setEpiloghs(Boolean.parseBoolean(str));
-            Subjects.add(cla);
+    ArrayList<String[]> Subjects;
+
+    void loadCsvToList(String csvPath) throws IOException, CsvValidationException {
+        Subjects = new ArrayList<String[]>();
+        CSVReader reader = new CSVReader(new FileReader(csvPath));
+        String[] line;
+        int i = 0;
+        while ((line = reader.readNext()) != null) {
+            Subjects.add(line);
         }
 
     }
 
-    void anaforaPerasmenwMathimatwn() throws IOException {
+    void ListToUser() throws IOException {
+       CSVWriter writer = new CSVWriter(new FileWriter(("userData/" + userName + ".csv"), true));
+       for (String[] line : Subjects) {
+           writer.writeNext(line);
+       }
+       writer.close();
+   }
 
-
-        boolean exists = Files.exists(Path.of("/home/konstandr/ectsTOOL/" + userName + ".txt"));
-
+    void anaforaPerasmenwMathimatwn() throws CsvValidationException, IOException {
+        boolean exists = Files.exists(Path.of("userData/" + userName + ".csv"));
+        loadCsvToList("userData/" + userName + ".csv");
         Scanner in = new Scanner(System.in);
         if (!exists) {
-            FileWriter fout = new FileWriter(userName + ".txt", true);
-            for (Subject aSubject : Subjects) {
-                System.out.println("Exeis perasei " + aSubject.getName() + "?");
+            for (String[] aSubject : Subjects) {
+                System.out.println("Exeis perasei " + aSubject[2] + "?");
                 String apanthsh = in.nextLine();
                 if (apanthsh.equals("Nai") || apanthsh.equals("nai")) {
-                    aSubject.setPerasmeno("nai");
+                    aSubject[6] = "nai";
                 }
             }
-            createTxt(fout);
-            System.out.println("Created user txt!\n");
-            fout.close();
-        }
-        /*else if (flag){
-            System.out.println("Θα θέλατε να προσθέσετε/αφαιρέσετε μαθήματα ή απλά να συνεχίσετε; Απαντήστε 1 για να προσθέσετε/αφαιρέσετε, οτιδήποτε άλλο για να συνεχίσετε");
-            int ap = in.nextInt();
-            if (ap == 1){
-                String fileName = userName+".txt";
-                try {
-                    Files.delete(Paths.get(fileName));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                FileWriter fout1 = new FileWriter(userName + ".txt", true);
-                for (Subject aSubject : Subjects) {
-                    System.out.println("Exeis perasei " + aSubject.getName() + "?");
-                    String apanthsh = in.next();
-                    if (apanthsh.equals("Nai") || apanthsh.equals("nai") || apanthsh.equals("n")) {
-                        aSubject.setPerasmeno("nai");
-                    }
-                    else{
-                        aSubject.setPerasmeno("oxi");
-                    }
-                }
-                createTxt(fout1);
-                System.out.println("Recreated user txt!\n");
-                fout1.close();
-                flag = false;
-
-            }
-        }*/
-    }
-
-    private void createTxt(FileWriter fout) throws IOException {
-        for (int i = 0; i < Subjects.size(); i++){
-            fout.write(Subjects.get(i).getEksamhno() + ", ");
-            fout.write(Subjects.get(i).getCode() + ", ");
-            fout.write(Subjects.get(i).getName() + ", ");
-            fout.write(Subjects.get(i).getEcts() + ", ");
-            fout.write(Subjects.get(i).getProapaitoumena() + ", ");
-            fout.write(Subjects.get(i).getKukloi() + ", ");
-
-
-                fout.write(Subjects.get(i).getPerasmeno() + ", ");
-
-            fout.write(Subjects.get(i).getPurhna() + ", ");
-            fout.write(Subjects.get(i).getKuklous() + ", ");
-            if (i < Subjects.size()-1) {
-                fout.write(Subjects.get(i).getEpiloghs() + ", ");
-            }
-            else{
-                fout.write(String.valueOf(Subjects.get(i).getEpiloghs()));
-            }
+            ListToUser();
+            System.out.println("Created user csv!\n");
+        } else {
+            System.out.println("Yparxei hdh");
         }
     }
 
-    void printString() throws FileNotFoundException {
-        //loadTxtToList(userName+".txt");
-        for (int i = 0; i < Subjects.size(); i++){
-            System.out.println(Subjects.get(i).getName() + " | " + Subjects.get(i).getEcts() + " | " +Subjects.get(i).getPerasmeno());
-        }
-    }
-
-    double printEcts() throws FileNotFoundException {
-        //loadTxtToList(userName+".txt");
+    double printEcts() throws IOException, CsvValidationException {
+        loadCsvToList("userData/" + userName + ".csv");
         double ect = 0;
-        System.out.println(Subjects.size());
-        for (int i = 0; i < Subjects.size(); i++){
-            //System.out.println(classes.get(i).getName() + " " + classes.get(i).getPerasmeno());
-            if (Subjects.get(i).getPerasmeno().equals("nai")){
-                ect += Double.parseDouble(Subjects.get(i).getEcts());
+        for (String[] aSubject : Subjects) {
+            if (aSubject[6].equals("nai")) {
+                ect += Double.parseDouble(aSubject[3]);
             }
         }
         System.out.println("O xrhsths " + userName + " exei " + ect + " ects apo 240");
@@ -156,9 +86,9 @@ public class Methods {
 
     void printKuklos() throws FileNotFoundException {
         String epil = printInfoKuklwn();
-        for (Subject aSubject : Subjects) {
-            if (aSubject.getPerasmeno().equals("nai") && aSubject.getKukloi().contains(String.valueOf(epil))) {
-                System.out.println("To auksha gia to " + aSubject.getName());
+        for (String[] aSubject : Subjects) {
+            if (aSubject[6].equals("nai") && aSubject[5].contains(String.valueOf(epil))) {
+                System.out.println("To auksha gia to " + aSubject[2]);
                 switch (epil) {
                     case "1" -> episthmhDedomenwn++;
                     case "2" -> epixeirisiakhEreuna++;
@@ -185,10 +115,9 @@ public class Methods {
 
     }
 
- /*   String oristeKuklousXrhsth() throws IOException {
+    void oristeKuklousXrhsth() throws IOException {
         printInfoKuklwn();
-
-    }*/
+    }
 
     String printInfoKuklwn(){
         System.out.println("Gia poion kyklo endiafereste?");
@@ -210,9 +139,9 @@ public class Methods {
         Scanner in = new Scanner(System.in);
         String epil = in.next();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate sto " + epil + "o eksamhno");
-        for (Subject aSubject : Subjects){
-            if (aSubject.getEksamhno().equals(epil)){
-                System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
+        for (String[] aSubject : Subjects){
+            if (aSubject[0].equals(epil)){
+                System.out.println(aSubject[2] + " " + aSubject[6]);
             }
         }
     }
@@ -223,9 +152,9 @@ public class Methods {
         int epil = in.nextInt();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate mexri to " + epil + "o eksamhno");
         for (int i = 1; i <= epil; i++) {
-            for (Subject aSubject : Subjects){
-                if (aSubject.getEksamhno().equals(String.valueOf(i))) {
-                    System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
+            for (String[] aSubject : Subjects){
+                if (aSubject[0].equals(String.valueOf(i))) {
+                    System.out.println(aSubject[2] + " " + aSubject[6]);
                 }
             }
         }
@@ -237,24 +166,23 @@ public class Methods {
         int epil = in.nextInt();
 
         if (epil == 1){
-            for (Subject aClasRoom : Subjects) {
-
-                if (Integer.parseInt(aClasRoom.getEksamhno()) % 2 != 0 && aClasRoom.getPerasmeno().equals("oxi")) {
-                    System.out.println(aClasRoom.getName());
+            for (String[] aClasRoom : Subjects) {
+                if (Integer.parseInt(aClasRoom[0]) % 2 != 0 && aClasRoom[6].equals("oxi")) {
+                    System.out.println(aClasRoom[2]);
                 }
             }
         }
         else if (epil == 2){
-            for (Subject aClasRoom : Subjects) {
-                if (Integer.parseInt(aClasRoom.getEksamhno()) % 2 == 0 && aClasRoom.getPerasmeno().equals("oxi")) {
-                    System.out.println(aClasRoom.getName());
+            for (String[] aClasRoom : Subjects) {
+                if (Integer.parseInt(aClasRoom[0]) % 2 == 0 && aClasRoom[6].equals("oxi")) {
+                    System.out.println(aClasRoom[2]);
                 }
             }
         }
         else{
-            for (Subject aClasRoom : Subjects) {
-                if (aClasRoom.getPerasmeno().equals("oxi")) {
-                    System.out.println(aClasRoom.getName());
+            for (String[] aClasRoom : Subjects) {
+                if (aClasRoom[6].equals("oxi")) {
+                    System.out.println(aClasRoom[2]);
                 }
             }
         }
@@ -263,8 +191,6 @@ public class Methods {
     void dhmiourgiaProswpikouProgrammatos(){
         //TODO: requestInfoAboutKuklous, CalculateEcts, proteineMathimataKyklwn, deikseDiathesimaMathimataGiaSumplhrwsh240, gg;
        //Ehoume apothikeusei sto txt tous kuklous tou xrhsth
-
     }
-
 
 }
