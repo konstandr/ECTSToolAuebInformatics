@@ -32,37 +32,39 @@ public class Methods {
     private int susthmataLogismikou = 0;
     private int diaxeirishDedKaiGnwsewn = 0;
     private int kuvernoasfaleia = 0;
-    ArrayList<String[]> Subjects;
+    ArrayList<Subject> Subjects;
 
     void loadCsvToList(String csvPath) throws IOException, CsvValidationException {
-        Subjects = new ArrayList<String[]>();
+        Subjects = new ArrayList<>();
         CSVReader reader = new CSVReader(new FileReader(csvPath));
         String[] line;
         int i = 0;
         while ((line = reader.readNext()) != null) {
-            Subjects.add(line);
+            Subjects.add(new Subject(line[0], line[1], line[2],line[3], line[4], line[5],
+                            line[6], Boolean.parseBoolean(line[7]), Boolean.parseBoolean(line[8]), Boolean.parseBoolean(line[9])));
+
         }
 
     }
 
     void ListToUser() throws IOException {
        CSVWriter writer = new CSVWriter(new FileWriter(("userData/" + userName + ".csv"), true));
-       for (String[] line : Subjects) {
-           writer.writeNext(line);
+       for (Subject line : Subjects) {
+           writer.writeNext(line.toStringArr());
        }
        writer.close();
    }
 
-    void anaforaPerasmenwMathimatwn() throws CsvValidationException, IOException {
+   void anaforaPerasmenwMathimatwn() throws CsvValidationException, IOException {
         boolean exists = Files.exists(Path.of("userData/" + userName + ".csv"));
-        loadCsvToList("userData/" + userName + ".csv");
+
         Scanner in = new Scanner(System.in);
         if (!exists) {
-            for (String[] aSubject : Subjects) {
-                System.out.println("Exeis perasei " + aSubject[2] + "?");
+            for (Subject aSubject : Subjects) {
+                System.out.println("Exeis perasei " + aSubject.getName() + "?");
                 String apanthsh = in.nextLine();
                 if (apanthsh.equals("Nai") || apanthsh.equals("nai")) {
-                    aSubject[6] = "nai";
+                    aSubject.setPerasmeno("nai");
                 }
             }
             ListToUser();
@@ -70,14 +72,16 @@ public class Methods {
         } else {
             System.out.println("Yparxei hdh");
         }
-    }
+       loadCsvToList("userData/" + userName + ".csv");
+
+   }
 
     double printEcts() throws IOException, CsvValidationException {
         loadCsvToList("userData/" + userName + ".csv");
         double ect = 0;
-        for (String[] aSubject : Subjects) {
-            if (aSubject[6].equals("nai")) {
-                ect += Double.parseDouble(aSubject[3]);
+        for (Subject aSubject : Subjects) {
+            if (aSubject.getPerasmeno().equals("nai")) {
+                ect += Double.parseDouble(aSubject.getEcts());
             }
         }
         System.out.println("O xrhsths " + userName + " exei " + ect + " ects apo 240");
@@ -86,9 +90,9 @@ public class Methods {
 
     void printKuklos() throws FileNotFoundException {
         String epil = printInfoKuklwn();
-        for (String[] aSubject : Subjects) {
-            if (aSubject[6].equals("nai") && aSubject[5].contains(String.valueOf(epil))) {
-                System.out.println("To auksha gia to " + aSubject[2]);
+        for (Subject aSubject : Subjects) {
+            if (aSubject.getPerasmeno().equals("nai") && aSubject.getKukloi().contains(String.valueOf(epil))) {
+                System.out.println("To auksha gia to " + aSubject.getName());
                 switch (epil) {
                     case "1" -> episthmhDedomenwn++;
                     case "2" -> epixeirisiakhEreuna++;
@@ -139,9 +143,9 @@ public class Methods {
         Scanner in = new Scanner(System.in);
         String epil = in.next();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate sto " + epil + "o eksamhno");
-        for (String[] aSubject : Subjects){
-            if (aSubject[0].equals(epil)){
-                System.out.println(aSubject[2] + " " + aSubject[6]);
+        for (Subject aSubject : Subjects){
+            if (aSubject.getEksamhno().equals(epil)){
+                System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
             }
         }
     }
@@ -152,9 +156,9 @@ public class Methods {
         int epil = in.nextInt();
         System.out.println("Oriste ta mathimata pou exete perasei/xrwstate mexri to " + epil + "o eksamhno");
         for (int i = 1; i <= epil; i++) {
-            for (String[] aSubject : Subjects){
-                if (aSubject[0].equals(String.valueOf(i))) {
-                    System.out.println(aSubject[2] + " " + aSubject[6]);
+            for (Subject aSubject : Subjects){
+                if (aSubject.getEksamhno().equals(String.valueOf(i))) {
+                    System.out.println(aSubject.getName() + " " + aSubject.getPerasmeno());
                 }
             }
         }
@@ -166,23 +170,23 @@ public class Methods {
         int epil = in.nextInt();
 
         if (epil == 1){
-            for (String[] aClasRoom : Subjects) {
-                if (Integer.parseInt(aClasRoom[0]) % 2 != 0 && aClasRoom[6].equals("oxi")) {
-                    System.out.println(aClasRoom[2]);
+            for (Subject aSubject : Subjects) {
+                if (Integer.parseInt(aSubject.getEksamhno()) % 2 != 0 && aSubject.getPerasmeno().equals("oxi")) {
+                    System.out.println(aSubject.getName());
                 }
             }
         }
         else if (epil == 2){
-            for (String[] aClasRoom : Subjects) {
-                if (Integer.parseInt(aClasRoom[0]) % 2 == 0 && aClasRoom[6].equals("oxi")) {
-                    System.out.println(aClasRoom[2]);
+            for (Subject aSubject : Subjects) {
+                if (Integer.parseInt(aSubject.getEksamhno()) % 2 == 0 && aSubject.getPerasmeno().equals("oxi")) {
+                    System.out.println(aSubject.getName());
                 }
             }
         }
         else{
-            for (String[] aClasRoom : Subjects) {
-                if (aClasRoom[6].equals("oxi")) {
-                    System.out.println(aClasRoom[2]);
+            for (Subject aSubject : Subjects) {
+                if (aSubject.getPerasmeno().equals("oxi")) {
+                    System.out.println(aSubject.getName());
                 }
             }
         }
