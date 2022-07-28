@@ -39,6 +39,7 @@ public class Main {
                 case "4" -> methods.selectEksamhno();
                 case "5" -> methods.selectMexriEksamhno();
                 case "6" -> methods.selectMathimataEpiloghshYpoxrewtika();
+                case "7" -> methods.oristeKuklousXrhsth();
                 default -> {
                 }
             }
@@ -50,7 +51,5 @@ public class Main {
         }
 
     }
-
-
 
 }

@@ -118,9 +118,35 @@ public class Methods {
         }
 
     }
+    String print = "";
+    void writeToTxt(String apanthsh, int fores) throws IOException {
+        FileWriter out = new FileWriter("users_kukloi.txt", true);
+
+        if (fores > 1) {
+            print += " " + apanthsh + ",";
+        } else {
+            out.write("/" + getUserName() + print + " " + apanthsh);
+            out.close();
+
+        }
+    }
 
     void oristeKuklousXrhsth() throws IOException {
-        printInfoKuklwn();
+        System.out.println("H diadikasia ginetai gia enan kuklo thn fora");
+        String epil = printInfoKuklwn();
+        for (Subject aSubject: Subjects){
+            if (aSubject.getKukloi().contains(epil)){
+                System.out.println(aSubject.getName() + " " + aSubject.getCode());
+            }
+        }
+        System.out.println("Epelekse 5 mathimata apo auta vash tou kwdikou");
+        int fores = 5;
+        while (fores > 0) {
+            Scanner in = new Scanner(System.in);
+            String apanthsh = in.nextLine();
+            writeToTxt(apanthsh, fores);
+            fores--;
+        }
     }
 
     String printInfoKuklwn(){
